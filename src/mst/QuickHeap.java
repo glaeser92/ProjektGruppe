@@ -42,6 +42,7 @@ public class QuickHeap<Key> {
 				return;
 			}
 			else{
+				//shift chunk one position to the left
 				heap[(S.get(pidx) - 1) % capacity] = heap[(S.get(pidx + 1) + 1) & capacity];
 				pidx++;
 			}
@@ -50,7 +51,46 @@ public class QuickHeap<Key> {
 	}
 	
 	public void decreaseKey(Key oldKey, Key newKey){
+		//testversion without hashmap  Fall, dass Key pivot-element ist noch zu betrachten
 		
+		//search element
+		int pos = 0;
+		for(int i = 0; i < heap.length; i++){
+			if(heap[i].equals(oldKey))
+				break;
+			pos++;
+		}
+		
+		//search pidx
+		int pidx = 0;
+		while(true){
+			if((S.get(pidx)+1) > pos){
+				pidx++;
+			}
+			else
+				break;
+		}
+		
+		//decrease element
+		while(true){
+			if(S.size() == pidx + 1){
+				heap[pos] = newKey;
+				return;
+			}
+			else if(smaller(heap[S.get(pidx)+1], newKey)){
+				heap[pos] = newKey;
+				return;
+			}
+			else{
+				//place element at the right of the next pivot in current position
+				heap[pos] = heap[S.get(pidx+1)+1];
+				//move pivot s[pidx+1] one position to the right
+				S.set(pidx+1, (S.get(pidx+1)+1));
+				//look at next chunk
+				pos = S.get(pidx+1);
+				pidx++;
+			}
+		}
 	}
 
 	private Key incrementalQuickSort(Key[] list, int idx, Stack<Integer> S) {
