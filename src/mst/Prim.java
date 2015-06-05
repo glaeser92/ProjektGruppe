@@ -6,7 +6,7 @@ public class Prim {
 	private boolean[] marked;
 	private QuickHeap<WeightedVertex> qh;
 	
-	public Prim(EdgeWeightedGraph G) {
+	public Prim(VertexWeightedGraph G) {
 		edgeTo = new Edge[G.V()];
 		distTo = new double[G.V()];
 		marked = new boolean[G.V()];
@@ -20,7 +20,7 @@ public class Prim {
 				prim(G, v);
 	}
 
-	private void prim(EdgeWeightedGraph G, int s) {
+	private void prim(VertexWeightedGraph G, int s) {
 		distTo[s] = 0.0;
 		qh.insert(new WeightedVertex(s, distTo[s]));
 		while(!qh.isEmpty()){
@@ -31,7 +31,7 @@ public class Prim {
 		
 	}
 
-	private void scan(EdgeWeightedGraph G, int v) {
+	private void scan(VertexWeightedGraph G, int v) {
 		marked[v] = true;
 		for (Edge e : G.adj(v)) {
 			int w = e.other(v);
