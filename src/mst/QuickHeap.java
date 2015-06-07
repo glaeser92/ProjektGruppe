@@ -30,71 +30,58 @@ public class QuickHeap<Key> {
 		idx = 0;
 	}
 	
-	public void insert(Key x){
-		int pidx = 0;
-		while(true){
-			//shift fictivious pivot one position to the left
-			heap[(S.get(pidx) + 1) % capacity] = heap[S.get(pidx) % capacity];
-			S.set(pidx, (S.get(pidx)+1));
-			//if we are in the first chunk
-			if((S.size() == pidx + 1) || smaller((heap[S.get(pidx + 1) % capacity]), x)){
-				heap[(S.get(pidx) - 1) % capacity] = x;
-				return;
-			}
-			else{
-				//shift chunk one position to the left
-				heap[(S.get(pidx) - 1) % capacity] = heap[(S.get(pidx + 1) + 1) & capacity];
-				pidx++;
-			}
-		}
-		
-	}
 	
-	public void decreaseKey(Key oldKey, Key newKey){
+	public void decreaseKey(int pos, Key newKey){
 		//testversion without hashmap to find element
 		
-		//search element
-		int pos = 0;
-		for(int i = 0; i < heap.length; i++){
-			if(heap[i].equals(oldKey))
-				break;
-			pos++;
-		}
+		int pidx = findChunk(pos);
 		
-		//search pidx
-		int pidx = 0;
-		while(true){
-			if((S.get(pidx)+1) >= pos){
-				pidx++;
-			}
-			else
-				break;
-		}
-		
-		//if key to decrease is pivot element
-		if(pos == pidx){
+		//if key is a pivot
+		if(S.get(pidx) == pos){
 			S.remove(pidx);
+			pidx--;
 		}
-		
-		//decrease element
+		//we are in the first chunk or the right chunk to insert
+		if((S.size() == pidx + 1) || smaller((heap[S.get(pidx+1) % capacity]), newKey)){
+			heap[pos % capacity] = newKey;
+			return;
+		}
+		else{
+			heap[pos % capacity] = heap[(S.get(pidx+1)+1) % capacity];
+			add(newKey, pidx + 1);
+		}
+	}
+	
+	private void add(Key x, int pidx){
 		while(true){
-			if(S.size() == pidx + 1){
-				heap[pos] = newKey;
-				return;
-			}
-			else if(smaller(heap[S.get(pidx)+1], newKey)){
-				heap[pos] = newKey;
+			heap[(S.get(pidx)+1) % capacity] = heap[S.get(pidx) % capacity];
+			S.set(pidx, S.get(pidx)+1);
+			if((S.size() == pidx + 1) || smaller(heap[(S.get(pidx)-1) % capacity], x)){
+				heap[(S.get(pidx)-1) % capacity] = x;
 				return;
 			}
 			else{
-				//place element at the right of the next pivot in current position
-				heap[pos] = heap[S.get(pidx+1)+1];
-				//move pivot s[pidx+1] one position to the right
-				S.set(pidx+1, (S.get(pidx+1)+1));
-				//look at next chunk
-				pos = S.get(pidx+1);
+				heap[(S.get(pidx)-1) % capacity] = heap[(S.get(pidx+1)+1) % capacity];
 				pidx++;
 			}
+		}
+	}
+	
+	public void insert(Key x){
+		add(x,0);		
+	}
+	
+	public void delete(int pos){
+		int pidx = findChunk(pos);
+		if(S.get(pidx) == pos){
+			S.remove(pidx);
+			pidx--;
+		}
+		for(int i = pidx; i >= 0; i--){
+			heap[pos % capacity] = heap[(S.get(i)-1) % capacity];
+			heap[(S.get(i)-1) % capacity] = heap[S.get(i) % capacity];
+			S.set(i, S.get(i)-1);
+			pos = S.get(i)+1;
 		}
 	}
 
@@ -160,6 +147,13 @@ public class QuickHeap<Key> {
 		} else {
 			return b;
 		}
+	}
+	
+	private int findChunk(int pos){
+		int pidx = 0;
+		while(pidx < S.size() && S.get(pidx) >= pos)
+			pidx++;
+		return pidx - 1;
 	}
 	
 	//TODO: check if method is correct
