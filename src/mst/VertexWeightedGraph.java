@@ -17,16 +17,6 @@ public class VertexWeightedGraph {
 		}
 	}
 
-	public VertexWeightedGraph(int V, int E) {
-		this(V);
-		if (E < 0)
-			throw new IllegalArgumentException(
-					"Number of Edges must be positive");
-		for (int i = 0; i < E; i++) {
-
-		}
-	}
-
 	public int V() {
 		return V;
 	}
@@ -39,6 +29,10 @@ public class VertexWeightedGraph {
 		adj[i].add(new WeightedVertex(j, weight));
 		adj[j].add(new WeightedVertex(i, weight));
 		E++;
+	}
+	
+	public Iterable<WeightedVertex> adj(int v){
+		return adj[v];
 	}
 
 }

@@ -51,7 +51,7 @@ public class QuickHeap<Key> {
 	}
 	
 	public void decreaseKey(Key oldKey, Key newKey){
-		//testversion without hashmap  Fall, dass Key pivot-element ist noch zu betrachten
+		//testversion without hashmap to find element
 		
 		//search element
 		int pos = 0;
@@ -64,11 +64,16 @@ public class QuickHeap<Key> {
 		//search pidx
 		int pidx = 0;
 		while(true){
-			if((S.get(pidx)+1) > pos){
+			if((S.get(pidx)+1) >= pos){
 				pidx++;
 			}
 			else
 				break;
+		}
+		
+		//if key to decrease is pivot element
+		if(pos == pidx){
+			S.remove(pidx);
 		}
 		
 		//decrease element
@@ -163,7 +168,12 @@ public class QuickHeap<Key> {
 	}
 
 	public boolean contains(Key x) {
-		// TODO Auto-generated method stub
+		//testversion without hashmap
+		
+		for(int i = 0; i < heap.length; i++){
+			if(heap[i].equals(x))
+				return true;
+		}
 		return false;
 	}
 
