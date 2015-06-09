@@ -3,19 +3,19 @@ package mst;
 public class WeightedVertex {
 	
 	private final int v;
-	private double weight;
+	private double distance;
 	
-	public WeightedVertex(int v, double weight){
+	public WeightedVertex(int v, double distance){
 		this.v = v;
-		this.weight = weight;
+		this.distance = distance;
 	}
 	
-	public double getWeight(){
-		return weight;
+	public double getDistance(){
+		return distance;
 	}
 	
-	public void setWeight(double weight){
-		this.weight = weight;
+	public void setDistance(double distance){
+		this.distance = distance;
 	}
 	
 	public int getV(){
