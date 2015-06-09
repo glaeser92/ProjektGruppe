@@ -1,5 +1,6 @@
 package mst;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 public class QuickHeap<Key> {
@@ -8,6 +9,7 @@ public class QuickHeap<Key> {
 	private int idx;
 	private Key[] heap;
 	private Stack<Integer> S;
+	private HashMap<Integer, Key> map;
 	
 	public QuickHeap() {
 		this(1);
@@ -20,6 +22,7 @@ public class QuickHeap<Key> {
 		S.push(A.length);
 		idx = 0;
 		copy(heap, A);
+		map = new HashMap<Integer, Key>();
 	}
 
 	public QuickHeap(int N) {
@@ -28,6 +31,7 @@ public class QuickHeap<Key> {
 		heap = (Key[]) new Object[capacity];
 		S.push(0);
 		idx = 0;
+		map = new HashMap<Integer, Key>();
 	}
 	
 	
