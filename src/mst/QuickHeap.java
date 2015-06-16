@@ -102,7 +102,7 @@ public class QuickHeap<Key> {
 	private Key incrementalQuickSort(int idx, Stack<Integer> S) {
 		int pidx;
 		if (idx == S.peek()) {
-			S.pop();
+			//S.pop();
 			return heap[idx];
 		}
 		// pidx = rand.nextInt(S.peek() - idx) + idx;
@@ -135,7 +135,7 @@ public class QuickHeap<Key> {
 	public Key extractMin() {
 		incrementalQuickSort(idx, S);
 		idx++;
-		//S.pop();
+		S.pop();
 		return heap[(idx - 1) % capacity];
 	}
 
@@ -174,7 +174,7 @@ public class QuickHeap<Key> {
 	
 	//TODO: check if method is correct
 	public boolean isEmpty() {
-		return (S.size() == 0);
+		return (S.size() == 1);
 	}
 
 	public boolean contains(Key x) {
