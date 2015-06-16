@@ -1,6 +1,6 @@
 package mst;
 
-public class WeightedVertex {
+public class WeightedVertex implements Comparable<WeightedVertex> {
 	
 	private final int v;
 	private double distance;
@@ -20,6 +20,15 @@ public class WeightedVertex {
 	
 	public int getV(){
 		return v;
+	}
+
+	public int compareTo(WeightedVertex that) {
+		if (this.getDistance() < that.getDistance())
+			return -1;
+		else if (this.getDistance() > that.getDistance())
+			return 1;
+		else
+			return 0;
 	}
 
 }

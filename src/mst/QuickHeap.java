@@ -23,6 +23,9 @@ public class QuickHeap<Key> {
 		idx = 0;
 		copy(heap, A);
 		map = new HashMap<Integer, Key>();
+		for (int i = 0; i < heap.length; i++) {
+			map.put(i, heap[i]);
+		}
 	}
 
 	public QuickHeap(int N) {
@@ -48,10 +51,12 @@ public class QuickHeap<Key> {
 		//we are in the first chunk or the right chunk to insert
 		if((S.size() == pidx + 1) || smaller((heap[S.get(pidx+1) % capacity]), newKey)){
 			heap[pos % capacity] = newKey;
+			map.put(pos % capacity, newKey);
 			return;
 		}
 		else{
 			heap[pos % capacity] = heap[(S.get(pidx+1)+1) % capacity];
+			map.put(pos % capacity, heap[(S.get(pidx+1)+1) % capacity]);
 			add(newKey, pidx + 1);
 		}
 	}
@@ -59,13 +64,16 @@ public class QuickHeap<Key> {
 	private void add(Key x, int pidx){
 		while(true){
 			heap[(S.get(pidx)+1) % capacity] = heap[S.get(pidx) % capacity];
+			map.put((S.get(pidx)+1) % capacity, heap[S.get(pidx) % capacity]);
 			S.set(pidx, S.get(pidx)+1);
-			if((S.size() == pidx + 1) || smaller(heap[(S.get(pidx)-1) % capacity], x)){
+			if((S.size() == pidx + 1) || smaller(heap[(S.get(pidx + 1)) % capacity], x)){
 				heap[(S.get(pidx)-1) % capacity] = x;
+				map.put((S.get(pidx)-1) % capacity, x);
 				return;
 			}
 			else{
 				heap[(S.get(pidx)-1) % capacity] = heap[(S.get(pidx+1)+1) % capacity];
+				map.put((S.get(pidx)-1) % capacity, heap[(S.get(pidx+1)+1) % capacity]);
 				pidx++;
 			}
 		}
@@ -83,60 +91,64 @@ public class QuickHeap<Key> {
 		}
 		for(int i = pidx; i >= 0; i--){
 			heap[pos % capacity] = heap[(S.get(i)-1) % capacity];
+			map.put(pos % capacity, heap[(S.get(i)-1) % capacity]);
 			heap[(S.get(i)-1) % capacity] = heap[S.get(i) % capacity];
+			map.put((S.get(i)-1) % capacity, heap[S.get(i) % capacity]);
 			S.set(i, S.get(i)-1);
 			pos = S.get(i)+1;
 		}
 	}
 
-	private Key incrementalQuickSort(Key[] list, int idx, Stack<Integer> S) {
+	private Key incrementalQuickSort(int idx, Stack<Integer> S) {
 		int pidx;
 		if (idx == S.peek()) {
 			S.pop();
-			return list[idx];
+			return heap[idx];
 		}
 		// pidx = rand.nextInt(S.peek() - idx) + idx;
 		pidx = S.peek() - 1;
-		int pidxNew = partition(list, pidx, idx, S.peek() - 1);
+		int pidxNew = partition(pidx, idx, S.peek() - 1);
 		S.push(pidxNew);
-		return incrementalQuickSort(list, idx, S);
+		return incrementalQuickSort(idx, S);
 	}
 
-	private int partition(Key[] list, int pivot, int leftIndex, int rightIndex) {
+	private int partition(int pivot, int leftIndex, int rightIndex) {
 		int pivotIndex = pivot;
-		Key pivotValue = list[pivotIndex];
+		Key pivotValue = heap[pivotIndex];
 		int storeIndex = leftIndex;
-		swap(list, pivotIndex, rightIndex);
+		swap(pivotIndex, rightIndex);
 		for (int i = leftIndex; i < rightIndex; i++) {
-			if (smaller(list[i], pivotValue)) {
-				swap(list, storeIndex, i);
+			if (smaller(heap[i], pivotValue)) {
+				swap(storeIndex, i);
 				storeIndex++;
 			}
 		}
-		swap(list, rightIndex, storeIndex);
+		swap(rightIndex, storeIndex);
 		return storeIndex;
 	}
 
 	public Key findMin() {
-		incrementalQuickSort(heap, idx, S);
+		incrementalQuickSort(idx, S);
 		return heap[idx % capacity];
 	}
 
 	public Key extractMin() {
-		incrementalQuickSort(heap, idx, S);
+		incrementalQuickSort(idx, S);
 		idx++;
-		S.pop();
+		//S.pop();
 		return heap[(idx - 1) % capacity];
 	}
 
 	private boolean smaller(Key i, Key j) {
-		return ((Comparable<Key>) i).compareTo(j) < 0;
+		return ((Comparable<Key>) i).compareTo(j) <= 0;
 	}
 
-	private void swap(Key[] list, int index1, int index2) {
-		Key temp = list[index1];
-		list[index1] = list[index2];
-		list[index2] = temp;
+	private void swap(int index1, int index2) {
+		Key temp = heap[index1];
+		heap[index1] = heap[index2];
+		map.put(index1, heap[index2]);
+		heap[index2] = temp;
+		map.put(index2, temp);
 	}
 
 	private void copy(Key[] dest, Key[] src) {
@@ -166,13 +178,7 @@ public class QuickHeap<Key> {
 	}
 
 	public boolean contains(Key x) {
-		//testversion without hashmap
-		
-		for(int i = 0; i < heap.length; i++){
-			if(heap[i].equals(x))
-				return true;
-		}
-		return false;
+		return map.containsKey(x);
 	}
 
 }

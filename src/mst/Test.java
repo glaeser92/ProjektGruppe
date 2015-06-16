@@ -16,21 +16,5 @@ public class Test {
 		Prim prim = new Prim(Graph);
 		
 		System.out.println(prim.weight());
-		
-//		PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
-//		
-//		Edge[] edges = new Edge[3];
-//		edges[0] = new Edge(0, 1, 5);
-//		edges[1] = new Edge(0, 2, 3);
-//		edges[2] = new Edge(1, 2, 6);
-//
-//		Hashtable<Integer, Integer> ht = new Hashtable<Integer, Integer>();
-//		ht.put(5, 0);
-//		ht.put(3, 1);
-//		ht.put(6, 2);
-//		
-//		System.out.println(ht.get(3));
-		
-
 	}
 }
