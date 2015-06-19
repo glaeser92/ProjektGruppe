@@ -34,18 +34,20 @@ public class Prim {
 	}
 
 	private void scan(EdgeWeightedGraph G, int v) {
+		WeightedVertex temp;
 		marked[v] = true;
 		for (Edge e : G.adj(v)) {
 			int w = e.other(v);
 			if (marked[w])
 				continue;
 			if (e.weight() < distTo[w].getDistance()) {
+				temp = new WeightedVertex(distTo[w].getV(), e.weight());
 				distTo[w].setDistance(e.weight());
 				edgeTo[w] = e;
 				if (qh.contains(distTo[w]))
-					qh.decreaseKey(w, distTo[w]);
+					qh.decreaseKey(distTo[w], temp);
 				else
-					qh.insert(distTo[w]);
+					qh.insert(temp);
 			}
 		}
 	}

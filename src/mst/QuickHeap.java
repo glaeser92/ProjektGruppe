@@ -110,7 +110,7 @@ public class QuickHeap<Key> {
 		int pidx;
 		if (idx == S.peek()) {
 			//S.pop();
-			return heap[idx];
+			return heap[idx % capacity];
 		}
 		// pidx = rand.nextInt(S.peek() - idx) + idx;
 		pidx = S.peek() - 1;
@@ -121,11 +121,11 @@ public class QuickHeap<Key> {
 
 	private int partition(int pivot, int leftIndex, int rightIndex) {
 		int pivotIndex = pivot;
-		Key pivotValue = heap[pivotIndex];
+		Key pivotValue = heap[pivotIndex % capacity];
 		int storeIndex = leftIndex;
 		swap(pivotIndex, rightIndex);
 		for (int i = leftIndex; i < rightIndex; i++) {
-			if (smaller(heap[i], pivotValue)) {
+			if (smaller(heap[i % capacity], pivotValue)) {
 				swap(storeIndex, i);
 				storeIndex++;
 			}
@@ -152,10 +152,10 @@ public class QuickHeap<Key> {
 	}
 
 	private void swap(int index1, int index2) {
-		Key temp = heap[index1];
-		heap[index1] = heap[index2];
-		map.put(heap[index2], index1);
-		heap[index2] = temp;
+		Key temp = heap[index1 % capacity];
+		heap[index1 % capacity] = heap[index2 % capacity];
+		map.put(heap[index2 % capacity], index1);
+		heap[index2 % capacity] = temp;
 		map.put(temp, index2);
 	}
 
