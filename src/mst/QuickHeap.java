@@ -1,11 +1,10 @@
 package mst;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 public class QuickHeap<Key> {
-	
-	// use sedgewicks idea to implement generic priority data types
 
 	private int capacity;
 	private int idx;
@@ -18,6 +17,12 @@ public class QuickHeap<Key> {
 		this(1);
 	}
 
+	/**
+	 * Initialises an QuickHeap with the max of N or A.length elements and
+	 * copies the elements of A into the QuickHeap
+	 * @param A
+	 * @param N
+	 */
 	public QuickHeap(Key[] A, int N) {
 		S = new Stack<Integer>();
 		capacity = max(N, A.length) + 1;
@@ -32,6 +37,10 @@ public class QuickHeap<Key> {
 		}
 	}
 
+	/**
+	 * Initialises an empty QuickHeap with space for N elements
+	 * @param N
+	 */
 	public QuickHeap(int N) {
 		S = new Stack<Integer>();
 		capacity = N + 1;
@@ -42,7 +51,12 @@ public class QuickHeap<Key> {
 		map = new HashMap<Key, Integer>();
 	}
 	
-	
+	/**
+	 * Replaces oldKey with newKey and restores the ordering of
+	 * the elements
+	 * @param oldKey
+	 * @param newKey
+	 */
 	public void decreaseKey(Key oldKey, Key newKey){
 		int pos = map.get(oldKey);
 		
@@ -54,11 +68,14 @@ public class QuickHeap<Key> {
 			pidx--;
 		}
 		//we are in the first chunk or the right chunk to insert
+		//we update heap[pos] to newValue
 		if((S.size() == pidx + 1) || smaller((heap[S.get(pidx+1) % capacity]), newKey)){
 			heap[pos % capacity] = newKey;
 			map.put(newKey, pos % capacity);
 			return;
 		}
+		//we place the element at the right of the next pivot in the current
+		//position and start the pivot movement procedure from that chunk
 		else{
 			heap[pos % capacity] = heap[(S.get(pidx+1)+1) % capacity];
 			map.put(heap[(S.get(pidx+1)+1) % capacity], pos % capacity);
@@ -66,16 +83,26 @@ public class QuickHeap<Key> {
 		}
 	}
 	
+	/**
+	 * Adds x starting from pivot S[pidx]
+	 * @param x
+	 * @param pidx
+	 */
 	private void add(Key x, int pidx){
 		while(true){
 			heap[(S.get(pidx)+1) % capacity] = heap[S.get(pidx) % capacity];
 			map.put(heap[S.get(pidx) % capacity], (S.get(pidx)+1) % capacity);
 			S.set(pidx, S.get(pidx)+1);
+			//we are in the first chunk or the right chunk to insert
+			//we insert x to the left of pidx
 			if((S.size() == pidx + 1) || smaller(heap[(S.get(pidx + 1)) % capacity], x)){
 				heap[(S.get(pidx)-1) % capacity] = x;
 				map.put(x, (S.get(pidx)-1) % capacity);
 				return;
 			}
+			//we place the element at the right of the next position one
+			//position to the left of the current pivot and continue this
+			//procedure with the next chunk
 			else{
 				heap[(S.get(pidx)-1) % capacity] = heap[(S.get(pidx+1)+1) % capacity];
 				map.put(heap[(S.get(pidx+1)+1) % capacity], (S.get(pidx)-1) % capacity);
@@ -84,17 +111,30 @@ public class QuickHeap<Key> {
 		}
 	}
 	
+	/**
+	 * Inserts x
+	 * @param x
+	 */
 	public void insert(Key x){
 		add(x,0);
 		n++;
 	}
 	
+	/**
+	 * Deletes the key at position pos
+	 * @param pos
+	 */
 	public void delete(int pos){
 		int pidx = findChunk(pos);
+		//if pos is a pivot we extract it from S
+		//and consider the next pivot
 		if(S.get(pidx) == pos){
 			S.remove(pidx);
 			pidx--;
 		}
+		//move element to left of the pivot to pos,
+		//move pivot one position to the left, update
+		//pos and continue with the next pivot
 		for(int i = pidx; i >= 0; i--){
 			heap[pos % capacity] = heap[(S.get(i)-1) % capacity];
 			map.put(heap[(S.get(i)-1) % capacity], pos % capacity);
@@ -105,7 +145,40 @@ public class QuickHeap<Key> {
 		}
 		n--;
 	}
+	
+	/**
+	 * Deletes Key x
+	 * @param x
+	 */
+	public void delete(Key x){
+		if(!map.containsKey(x)){
+			throw new NoSuchElementException("Key is not in the QuickHeap");
+		}
+		else{
+			int pos = map.get(x);
+			int pidx = findChunk(pos);
+			if(S.get(pidx) == pos){
+				S.remove(pidx);
+				pidx--;
+			}
+			for(int i = pidx; i >= 0; i--){
+				heap[pos % capacity] = heap[(S.get(i)-1) % capacity];
+				map.put(heap[(S.get(i)-1) % capacity], pos % capacity);
+				heap[(S.get(i)-1) % capacity] = heap[S.get(i) % capacity];
+				map.put(heap[S.get(i) % capacity], (S.get(i)-1) % capacity);
+				S.set(i, S.get(i)-1);
+				pos = S.get(i)+1;
+			}
+			n--;	
+		}
+	}
 
+	/**
+	 * Incrementally gives the next smallest element of the QuickHeap
+	 * @param idx
+	 * @param S
+	 * @return
+	 */
 	private Key incrementalQuickSort(int idx, Stack<Integer> S) {
 		int pidx;
 		if (idx == S.peek()) {
@@ -119,6 +192,14 @@ public class QuickHeap<Key> {
 		return incrementalQuickSort(idx, S);
 	}
 
+	/**
+	 * Helper routine for incrementalQuickSort. Partitions the QuickHeap from
+	 * leftIndex to rightIndex with the pivot element pivot
+	 * @param pivot
+	 * @param leftIndex
+	 * @param rightIndex
+	 * @return
+	 */
 	private int partition(int pivot, int leftIndex, int rightIndex) {
 		int pivotIndex = pivot;
 		Key pivotValue = heap[pivotIndex % capacity];
@@ -134,11 +215,19 @@ public class QuickHeap<Key> {
 		return storeIndex;
 	}
 
+	/**
+	 * Finds the smalles Element
+	 * @return
+	 */
 	public Key findMin() {
 		incrementalQuickSort(idx, S);
 		return heap[idx % capacity];
 	}
 
+	/**
+	 * Extracts the smallest Element
+	 * @return
+	 */
 	public Key extractMin() {
 		incrementalQuickSort(idx, S);
 		idx++;
@@ -147,10 +236,21 @@ public class QuickHeap<Key> {
 		return heap[(idx - 1) % capacity];
 	}
 
+	/**
+	 * Returns 1 if i <= j
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	private boolean smaller(Key i, Key j) {
 		return ((Comparable<Key>) i).compareTo(j) <= 0;
 	}
 
+	/**
+	 * Swaps elements at index1 and index2
+	 * @param index1
+	 * @param index2
+	 */
 	private void swap(int index1, int index2) {
 		Key temp = heap[index1 % capacity];
 		heap[index1 % capacity] = heap[index2 % capacity];
@@ -159,12 +259,23 @@ public class QuickHeap<Key> {
 		map.put(temp, index2);
 	}
 
+	/**
+	 * Copies elements from src to dest
+	 * @param dest
+	 * @param src
+	 */
 	private void copy(Key[] dest, Key[] src) {
 		for (int i = 0; i < src.length; i++) {
 			dest[i] = src[i];
 		}
 	}
 
+	/**
+	 * Returns the bigger integer
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	private int max(int a, int b) {
 		if (a >= b) {
 			return a;
@@ -173,6 +284,11 @@ public class QuickHeap<Key> {
 		}
 	}
 	
+	/**
+	 * Finds the chunk of position pos
+	 * @param pos
+	 * @return
+	 */
 	private int findChunk(int pos){
 		int pidx = 0;
 		while(pidx < S.size() && S.get(pidx) >= pos)
@@ -180,19 +296,21 @@ public class QuickHeap<Key> {
 		return pidx - 1;
 	}
 	
-	//TODO: check if method is correct
+	/**
+	 * Returns true if QuickHeap is empty
+	 * @return
+	 */
 	public boolean isEmpty() {
 		return (n==0);
 	}
 
+	/**
+	 * Returns true if QuickHeap contains x
+	 * @param x
+	 * @return
+	 */
 	public boolean contains(Key x) {
 		return map.containsKey(x);
-	}
-	
-	// help functions for debugging:
-	
-	public void printStack(){
-		System.out.println(S.toString());
 	}
 
 }
