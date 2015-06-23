@@ -25,7 +25,7 @@ public class QuickHeap<Key> {
 	 */
 	public QuickHeap(Key[] A, int N) {
 		S = new Stack<Integer>();
-		capacity = max(N, A.length) + 1;
+		capacity = max(N, A.length);
 		heap = (Key[]) new Object[capacity];
 		n = A.length;
 		S.push(A.length);
@@ -43,7 +43,7 @@ public class QuickHeap<Key> {
 	 */
 	public QuickHeap(int N) {
 		S = new Stack<Integer>();
-		capacity = N + 1;
+		capacity = N;
 		heap = (Key[]) new Object[capacity];
 		S.push(0);
 		idx = 0;
@@ -116,6 +116,8 @@ public class QuickHeap<Key> {
 	 * @param x
 	 */
 	public void insert(Key x){
+		if(capacity == n) resize(capacity*2);
+		if(contains(x)) throw new IllegalArgumentException("key is already in the heap");
 		add(x,0);
 		n++;
 	}
@@ -311,6 +313,20 @@ public class QuickHeap<Key> {
 	 */
 	public boolean contains(Key x) {
 		return map.containsKey(x);
+	}
+	
+	/**
+	 * creates a new quickHeap with capacity newCapacity
+	 * @param newCapacity
+	 */
+	private void resize(int newCapacity) {
+		if(newCapacity <= capacity) throw new IllegalArgumentException();
+		Key[] temp = (Key[]) new Object[newCapacity];
+		for (int i = 0; i < n; i++) {
+			temp[i] = heap[i];
+		}
+		heap = temp;
+		capacity = newCapacity;
 	}
 
 }
