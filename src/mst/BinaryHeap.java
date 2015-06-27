@@ -86,6 +86,10 @@ public class BinaryHeap<Key> {
 			k = j;
 		}
 	}
+	
+	public boolean contains(Key x){
+		return map.containsKey(x);
+	}
 
 	private void swim(int k) {
 		while(k > 1 && greater(k/2, k)){
