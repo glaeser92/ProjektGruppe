@@ -25,7 +25,7 @@ public class QuickHeap<Key> {
 	 */
 	public QuickHeap(Key[] A, int N) {
 		S = new Stack<Integer>();
-		capacity = max(N, A.length);
+		capacity = max(N, A.length) + 1;
 		heap = (Key[]) new Object[capacity];
 		n = A.length;
 		S.push(A.length);
@@ -43,7 +43,7 @@ public class QuickHeap<Key> {
 	 */
 	public QuickHeap(int N) {
 		S = new Stack<Integer>();
-		capacity = N;
+		capacity = N + 1;
 		heap = (Key[]) new Object[capacity];
 		S.push(0);
 		idx = 0;
@@ -316,7 +316,7 @@ public class QuickHeap<Key> {
 	}
 	
 	/**
-	 * creates a new quickHeap with capacity newCapacity
+	 * creates a new QuickHeap with capacity newCapacity
 	 * @param newCapacity
 	 */
 	private void resize(int newCapacity) {
