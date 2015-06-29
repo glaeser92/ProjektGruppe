@@ -116,7 +116,7 @@ public class QuickHeap<Key> {
 	 * @param x
 	 */
 	public void insert(Key x){
-		if(capacity == n) resize(capacity*2);
+		if(capacity == n+1) resize(capacity*2);
 		if(contains(x)) throw new IllegalArgumentException("key is already in the heap");
 		add(x,0);
 		n++;
