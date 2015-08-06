@@ -9,7 +9,7 @@ public class BinaryHeap<Key> {
 	private HashMap<Key, Integer> map;
 	
 	public BinaryHeap(int initCapacity){
-		heap = (Key[]) new Object[ + 1];
+		heap = (Key[]) new Object[initCapacity + 1];
 		N = 0;
 		map = new HashMap<Key, Integer>();
 	}

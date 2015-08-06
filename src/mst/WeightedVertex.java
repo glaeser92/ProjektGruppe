@@ -4,14 +4,23 @@ public class WeightedVertex implements Comparable<WeightedVertex> {
 	
 	private final int v;
 	private double distance;
+	private int priority;
+	
+	private static int timestamp = 0;
 	
 	public WeightedVertex(int v, double distance){
 		this.v = v;
 		this.distance = distance;
+		this.priority = timestamp;
+		timestamp++;
 	}
 	
 	public double getDistance(){
 		return distance;
+	}
+	
+	public int getPriority() {
+		return priority;
 	}
 	
 	public void setDistance(double distance){
@@ -27,8 +36,14 @@ public class WeightedVertex implements Comparable<WeightedVertex> {
 			return -1;
 		else if (this.getDistance() > that.getDistance())
 			return 1;
-		else
-			return 0;
+		else{
+			if(this.getPriority() < that.getPriority()){
+				return -1;
+			}
+			else{
+				return 1;
+			}
+		}
 	}
 
 }

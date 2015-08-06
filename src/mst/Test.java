@@ -25,13 +25,13 @@ public class Test {
 //		
 //		System.out.println("Time: " + (endTime - startTime));
 //		
-		QuickHeap<Integer> qh = new QuickHeap<>(5);
+		QuickHeap<Edge> qh = new QuickHeap<>(5);
 		
-		for (int i = 0; i < 7; i++) {
-			qh.insert(new Integer(i));
-		}
+		qh.insert(new Edge(0, 1, 5));
+		qh.insert(new Edge(1, 2, 3));
+		qh.insert(new Edge(0, 2, 5));
 		
-		for(int i = 0; i < 7; i++){
+		for (int i = 0; i < 4; i++) {
 			System.out.println(qh.extractMin());
 		}
 		

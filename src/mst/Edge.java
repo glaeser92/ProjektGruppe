@@ -4,6 +4,9 @@ public class Edge implements Comparable<Edge> {
 	private final int v;
 	private final int w;
 	private final double weight;
+	private int priority;
+	
+	private static int timestamp = 0;
 
 	public Edge(int v, int w, double weight) {
 		if (v < 0)
@@ -15,6 +18,8 @@ public class Edge implements Comparable<Edge> {
 		this.v = v;
 		this.w = w;
 		this.weight = weight;
+		this.priority = timestamp;
+		timestamp++;
 	}
 
 	public double weight() {
@@ -23,6 +28,10 @@ public class Edge implements Comparable<Edge> {
 
 	public int either() {
 		return v;
+	}
+	
+	public int priority(){
+		return priority;
 	}
 
 	public int other(int vertex) {
@@ -39,8 +48,14 @@ public class Edge implements Comparable<Edge> {
 			return -1;
 		else if (this.weight() > that.weight)
 			return 1;
-		else
-			return 0;
+		else{
+			if(this.priority() < that.priority()){
+				return -1;
+			}
+			else{
+				return 1;
+			}
+		}
 	}
 
 	public String toString() {
