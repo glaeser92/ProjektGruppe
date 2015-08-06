@@ -2,6 +2,7 @@ package mst;
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.Stack;
 
 public class QuickHeap<Key> {
@@ -182,13 +183,14 @@ public class QuickHeap<Key> {
 	 * @return
 	 */
 	private Key incrementalQuickSort(int idx, Stack<Integer> S) {
+		Random rand = new Random();
 		int pidx;
 		if (idx == S.peek()) {
 			//S.pop();
 			return heap[idx % capacity];
 		}
-		// pidx = rand.nextInt(S.peek() - idx) + idx;
-		pidx = S.peek() - 1;
+		pidx = rand.nextInt(S.peek() - idx) + idx;
+		//pidx = S.peek() - 1;
 		int pidxNew = partition(pidx, idx, S.peek() - 1);
 		S.push(pidxNew);
 		return incrementalQuickSort(idx, S);
