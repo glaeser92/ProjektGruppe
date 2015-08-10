@@ -77,6 +77,12 @@ public class BinaryHeap<Key> {
 		swim(idx);
 	}
 	
+	public boolean contains(Key x){
+		return map.containsKey(x);
+	}
+	
+	//----------- Helper functions to restore the heap property -----------
+	
 	private void sink(int k) {
 		while(2*k <= N){
 			int j = 2*k;
@@ -86,10 +92,6 @@ public class BinaryHeap<Key> {
 			k = j;
 		}
 	}
-	
-	public boolean contains(Key x){
-		return map.containsKey(x);
-	}
 
 	private void swim(int k) {
 		while(k > 1 && greater(k/2, k)){
@@ -98,6 +100,8 @@ public class BinaryHeap<Key> {
 		}
 		
 	}
+	
+	//----------- Helper functions ----------------------------------------
 
 	private boolean greater(int i, int j) {
 		return ((Comparable<Key>)heap[i]).compareTo(heap[j]) > 0;

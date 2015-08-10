@@ -14,13 +14,12 @@ public class Test {
 		Graph.addEdge(new Edge(1, 3, 15));
 		
 		
-		Prim prim = new Prim(Graph);
+		PrimQH prim = new PrimQH(Graph);
 		
 		for(Edge e : prim.edges()){
 			System.out.println(e.toString());
 		}
 		
-
 //		
 //		QuickHeap<Edge> qh = new QuickHeap<>(5);
 //		
