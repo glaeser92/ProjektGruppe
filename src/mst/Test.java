@@ -1,12 +1,9 @@
 package mst;
 
-import java.util.Hashtable;
-import java.util.PriorityQueue;
-
 public class Test {
 	
 	public static void main(String[] args){
-		EdgeWeightedGraph Graph = new EdgeWeightedGraph(4);
+	/*	EdgeWeightedGraph Graph = new EdgeWeightedGraph(4);
 		Graph.addEdge(new Edge(0, 1, 10));
 		Graph.addEdge(new Edge(0, 2, 6));
 		Graph.addEdge(new Edge(0, 3, 5));
@@ -18,18 +15,20 @@ public class Test {
 		
 		for(Edge e : prim.edges()){
 			System.out.println(e.toString());
+		}*/
+		
+
+		QuickHeap<Integer> qh = new QuickHeap<>(3);
+		
+		for (int i = 20; i > 0; i-=2) {
+			qh.insert(new Integer(i));
 		}
 		
-//		
-//		QuickHeap<Edge> qh = new QuickHeap<>(5);
-//		
-//		qh.insert(new Edge(0, 1, 5));
-//		qh.insert(new Edge(1, 2, 3));
-//		qh.insert(new Edge(0, 2, 5));
-//		
-//		for (int i = 0; i < 4; i++) {
-//			System.out.println(qh.extractMin());
-//		}
+		for (int i = 0; i < 5; i++) {
+			System.out.println(qh.extractMin());
+		}
+		
+		System.out.println("Test");
 		
 	}
 }
