@@ -7,13 +7,13 @@ public class PrimQH {
 	private Edge[] edgeTo;
 	private WeightedVertex[] distTo;
 	private boolean[] marked;
-	private BinaryHeap<WeightedVertex> bh;
+	private QuickHeap<WeightedVertex> qh;
 
 	public PrimQH(EdgeWeightedGraph G) {
 		edgeTo = new Edge[G.V()];
 		distTo = new WeightedVertex[G.V()];
 		marked = new boolean[G.V()];
-		bh = new BinaryHeap<WeightedVertex>(G.V());
+		qh = new QuickHeap<WeightedVertex>(G.V());
 
 		for (int v = 0; v < G.V(); v++)
 			distTo[v] = new WeightedVertex(v, Double.POSITIVE_INFINITY);
@@ -25,9 +25,9 @@ public class PrimQH {
 
 	private void prim(EdgeWeightedGraph G, int s) {
 		distTo[s].setDistance(0.0);
-		bh.insert(distTo[s]);
-		while (!bh.isEmpty()) {
-			WeightedVertex v = bh.delMin();
+		qh.insert(distTo[s]);
+		while (!qh.isEmpty()) {
+			WeightedVertex v = qh.extractMin();
 			scan(G, v.getV());
 		}
 
@@ -44,10 +44,10 @@ public class PrimQH {
 				temp = new WeightedVertex(distTo[w].getV(), e.weight());
 				distTo[w].setDistance(e.weight());
 				edgeTo[w] = e;
-				if (bh.contains(distTo[w]))
-					bh.decreaseKey(distTo[w], temp);
+				if (qh.contains(distTo[w]))
+					qh.decreaseKey(distTo[w], temp);
 				else
-					bh.insert(temp);
+					qh.insert(temp);
 			}
 		}
 	}
