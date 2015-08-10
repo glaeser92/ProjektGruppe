@@ -1,34 +1,40 @@
 package mst;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
 public class Test {
 	
 	public static void main(String[] args){
-	/*	EdgeWeightedGraph Graph = new EdgeWeightedGraph(4);
-		Graph.addEdge(new Edge(0, 1, 10));
-		Graph.addEdge(new Edge(0, 2, 6));
-		Graph.addEdge(new Edge(0, 3, 5));
-		Graph.addEdge(new Edge(2, 3, 4));
-		Graph.addEdge(new Edge(1, 3, 15));
-		
-		
-		PrimQH prim = new PrimQH(Graph);
-		
-		for(Edge e : prim.edges()){
-			System.out.println(e.toString());
-		}*/
-		
-
-		QuickHeap<Integer> qh = new QuickHeap<>(3);
-		
-		for (int i = 20; i > 0; i-=2) {
-			qh.insert(new Integer(i));
-		}
-		
-		for (int i = 0; i < 5; i++) {
-			System.out.println(qh.extractMin());
-		}
-		
-		System.out.println("Test");
-		
+		EdgeWeightedGraph graph;
+		File file = new File("Ue11_small.txt");
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("src/mst/Ue11_small.txt"));
+			StringTokenizer st;
+			int vertices = Integer.parseInt(reader.readLine());
+			int edges = Integer.parseInt(reader.readLine());
+			String line;
+			graph = new EdgeWeightedGraph(vertices);
+			while((line = reader.readLine()) != null){
+				st = new StringTokenizer(line);
+				graph.addEdge(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Double.parseDouble(st.nextToken())));
+			}
+			
+			for(Edge e : graph.edges())
+				System.out.println(e);
+			
+			PrimQH prim = new PrimQH(graph);
+			System.out.println(prim.weight());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 }
