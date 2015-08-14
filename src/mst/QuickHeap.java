@@ -13,13 +13,9 @@ public class QuickHeap<Key> {
 	private Stack<Integer> S;
 	private HashMap<Key, Integer> map;
 	private int n;
-	
-	public QuickHeap() {
-		this(1);
-	}
 
 	/**
-	 * Initialises an QuickHeap with the max of N or A.length elements and
+	 * Initializes an QuickHeap with the max of N or A.length elements and
 	 * copies the elements of A into the QuickHeap
 	 * @param A
 	 * @param N
@@ -39,7 +35,7 @@ public class QuickHeap<Key> {
 	}
 
 	/**
-	 * Initialises an empty QuickHeap with space for N elements
+	 * Initializes an empty QuickHeap with space for N elements
 	 * @param N
 	 */
 	public QuickHeap(int N) {
@@ -59,6 +55,9 @@ public class QuickHeap<Key> {
 	 * @param newKey
 	 */
 	public void decreaseKey(Key oldKey, Key newKey){
+                if(!map.containsKey(oldKey)){
+                    throw new IllegalArgumentException("QuickHeap does not contain key");
+                }
 		int pos = map.get(oldKey);
 		
 		int pidx = findChunk(pos);
@@ -117,7 +116,9 @@ public class QuickHeap<Key> {
 	 * @param x
 	 */
 	public void insert(Key x){
-		if(capacity == n+1) resize(capacity*2);
+		if(n == capacity-1){
+                    throw new IndexOutOfBoundsException("QuickHeap is full");
+                }
 		if(contains(x)) throw new IllegalArgumentException("key is already in the heap");
 		add(x,0);
 		n++;
@@ -195,6 +196,20 @@ public class QuickHeap<Key> {
 		S.push(pidxNew);
 		return incrementalQuickSort(idx, S);
 	}
+        
+        private Key incrementalQuickSortIterative(int idx, Stack<Integer> S){
+            Random rand = new Random();
+            int pidx;
+            while(S.peek() != idx){
+                //pidx = rand.nextInt(S.peek() - idx) + idx;
+                pidx = S.peek()- 1;
+		int pidxNew = partition(pidx, idx, S.peek() - 1);
+		S.push(pidxNew);
+            }
+            return heap[idx % capacity];
+        }
+        
+        
 
 	/**
 	 * Helper routine for incrementalQuickSort. Partitions the QuickHeap from
@@ -233,10 +248,11 @@ public class QuickHeap<Key> {
 	 * @return
 	 */
 	public Key extractMin() {
-		incrementalQuickSort(idx, S);
+		incrementalQuickSortIterative(idx, S);
 		idx++;
 		S.pop();
 		n--;
+                map.remove(heap[(idx - 1) % capacity]);
 		return heap[(idx - 1) % capacity];
 	}
 
@@ -247,7 +263,7 @@ public class QuickHeap<Key> {
 	 * @return
 	 */
 	private boolean smaller(Key i, Key j) {
-		return ((Comparable<Key>) i).compareTo(j) <= 0;
+		return ((Comparable<Key>) i).compareTo(j) < 0;
 	}
 
 	/**
@@ -316,19 +332,4 @@ public class QuickHeap<Key> {
 	public boolean contains(Key x) {
 		return map.containsKey(x);
 	}
-	
-	/**
-	 * creates a new QuickHeap with capacity newCapacity
-	 * @param newCapacity
-	 */
-	private void resize(int newCapacity) {
-		if(newCapacity <= capacity) throw new IllegalArgumentException();
-		Key[] temp = (Key[]) new Object[newCapacity];
-		for (int i = 0; i < n; i++) {
-			temp[i] = heap[i];
-		}
-		heap = temp;
-		capacity = newCapacity;
-	}
-
 }
