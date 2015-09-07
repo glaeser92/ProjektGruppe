@@ -8,7 +8,7 @@ public class Kruskal {
 	private Queue<Edge> mst = new LinkedList<Edge>();
 	
 	public Kruskal(EdgeWeightedGraph G){
-		QuickHeap<Edge> qh = new QuickHeap<Edge>(G.E());
+		QuickHeapHashing<Edge> qh = new QuickHeapHashing<Edge>(G.E());
 		for(Edge e : G.edges()) {
 			qh.insert(e);
 		}

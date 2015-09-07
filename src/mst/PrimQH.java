@@ -7,13 +7,13 @@ public class PrimQH {
 	private Edge[] edgeTo;
 	private WeightedVertex[] distTo;
 	private boolean[] marked;
-	private QuickHeap<WeightedVertex> qh;
+	private QuickHeapHashing<WeightedVertex> qh;
 
 	public PrimQH(EdgeWeightedGraph G) {
 		edgeTo = new Edge[G.V()];
 		distTo = new WeightedVertex[G.V()];
 		marked = new boolean[G.V()];
-		qh = new QuickHeap<WeightedVertex>(G.V());
+		qh = new QuickHeapHashing<WeightedVertex>(G.V());
 
 		for (int v = 0; v < G.V(); v++)
 			distTo[v] = new WeightedVertex(v, Double.POSITIVE_INFINITY);
