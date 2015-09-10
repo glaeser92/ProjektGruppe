@@ -179,36 +179,9 @@ public class QuickHeap<Key extends hasID> {
 		else
 			insert(item, 0, itemId);
 	}
+	
 	/**
-	 * Deletes the key at position pos
-	 * 
-	 * @param pos
-	 */
-	public void delete(int pos) {
-		int pidx = findChunk(pos);
-		// if pos is a pivot we extract it from S
-		// and consider the next pivot
-		if (S.get(pidx) == pos) {
-			S.remove(pidx);
-			pidx--;
-		}
-		// move element to left of the pivot to pos,
-		// move pivot one position to the left, update
-		// pos and continue with the next pivot
-		for (int i = pidx; i >= 0; i--) {
-			heap[pos % capacity] = heap[(S.get(i) - 1) % capacity];
-			posH[heap[pos % capacity].getID()] = heap[(S.get(i) - 1) % capacity].getID();
-			heap[(S.get(i) - 1) % capacity] = heap[S.get(i) % capacity];
-			posH[heap[S.get(i)].getID()] = S.get(i) - 1;
-			S.set(i, S.get(i) - 1);
-			pos = S.get(i) + 1;
-		}
-		n--;
-	}
-
-	/**
-	 * Deletes Key x
-	 * 
+	 * deletes Key x
 	 * @param x
 	 */
 	public void delete(Key x) {
@@ -220,6 +193,12 @@ public class QuickHeap<Key extends hasID> {
 			if (S.get(pidx) == pos) {
 				S.remove(pidx);
 				pidx--;
+			}
+			if(pidx == 0){
+				swap(pos, idx);
+				posH[heap[idx].getID()] = -1;
+				idx++;
+				return;
 			}
 			for (int i = pidx; i >= 0; i--) {
 				heap[pos % capacity] = heap[(S.get(i) - 1) % capacity];
